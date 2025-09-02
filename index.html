@@ -241,7 +241,29 @@
             border-radius: 20px;
             border: none;
         }
+        .site-logo {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            max-width: 80px;
+            max-height: 60px;
+            width: auto;
+            height: auto;
+            z-index: 999;
+            filter: drop-shadow(1px 1px 4px rgba(0,0,0,0.3));
+            transition: transform 0.3s ease;
+        }
         
+        .site-logo:hover {
+            transform: scale(1.1);
+        }
+        
+        .page-toggle {
+            position: fixed;
+            top: 90px;
+            right: 20px;
+            z-index: 1000;
+        }
         .modal-header {
             background: linear-gradient(45deg, var(--brand-teal), var(--light-teal));
             color: white;
@@ -452,6 +474,11 @@
     <!-- User Page -->
     <div id="user-page" class="container-fluid">
         <div class="container">
+            <!-- Site Logo (top right) -->
+<img src="logo.png" alt="Site Logo" class="site-logo" onerror="this.style.display='none'">
+
+<!-- CineWav Logo (top left) -->
+<img src="Cinewav.png" alt="CineWav" class="cinewav-logo" onerror="this.style.display='none'">
             <!-- Hero Section -->
             <div class="hero-section">
                 <!-- Logo Image -->
