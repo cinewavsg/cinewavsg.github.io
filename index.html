@@ -785,7 +785,7 @@
             return new Date(0);
         }
         
-        // FIXED: Improved timestamp formatting with Singapore timezone
+        // FIXED: Improved timestamp formatting
         function formatTimestamp(timestamp) {
             if (!timestamp) {
                 return 'No timestamp';
@@ -799,45 +799,22 @@
             }
             
             try {
-                // Convert to Singapore timezone (SGT = UTC+8)
-                const singaporeDate = new Date(date.getTime() + (8 * 60 * 60 * 1000) - (date.getTimezoneOffset() * 60 * 1000));
-                
-                const dateStr = singaporeDate.toLocaleDateString('en-GB', {
+                const dateStr = date.toLocaleDateString('en-GB', {
                     day: '2-digit',
                     month: '2-digit',
-                    year: 'numeric',
-                    timeZone: 'Asia/Singapore'
+                    year: 'numeric'
                 });
                 
-                const timeStr = singaporeDate.toLocaleTimeString('en-GB', {
+                const timeStr = date.toLocaleTimeString('en-GB', {
                     hour: '2-digit',
                     minute: '2-digit',
-                    hour12: false,
-                    timeZone: 'Asia/Singapore'
+                    hour12: false
                 });
                 
-                return `${dateStr} at ${timeStr} SGT`;
+                return `${dateStr} at ${timeStr}`;
             } catch (e) {
                 console.warn('Error formatting timestamp:', timestamp, e);
-                
-                // Fallback: try direct Singapore timezone formatting
-                try {
-                    const sgFormatter = new Intl.DateTimeFormat('en-GB', {
-                        day: '2-digit',
-                        month: '2-digit',
-                        year: 'numeric',
-                        hour: '2-digit',
-                        minute: '2-digit',
-                        hour12: false,
-                        timeZone: 'Asia/Singapore'
-                    });
-                    
-                    const formattedSG = sgFormatter.format(date);
-                    return `${formattedSG} SGT`;
-                } catch (e2) {
-                    console.warn('Singapore timezone formatting also failed:', e2);
-                    return 'Format Error';
-                }
+                return 'Format Error';
             }
         }
         
