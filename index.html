@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>River of Dreams</title>
+    <title>River of Dreams - Fixed Sorting</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
@@ -322,6 +322,17 @@
             display: block;
         }
         
+        /* Debug styles */
+        .debug-info {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 10px;
+            padding: 1rem;
+            margin: 1rem 0;
+            font-family: monospace;
+            font-size: 0.8rem;
+            border-left: 4px solid #007bff;
+        }
+        
         /* Mobile Responsive Styles */
         @media (max-width: 768px) {
             .hero-section {
@@ -466,17 +477,18 @@
     <iframe name="dream-frame" class="hidden-iframe"></iframe>
     <iframe name="lyrics-frame" class="hidden-iframe"></iframe>
     
-    <!-- CineWav Logo (optional - if you have the logo file) -->
-    <!-- <img src="Cinewav.png" alt="CineWav" class="cinewav-logo" onerror="this.style.display='none'"> -->
-    
-    
+    <!-- Page Toggle Button -->
+    <div class="page-toggle">
+        <button class="btn toggle-btn" onclick="togglePage()">
+            <span id="toggle-text">Admin</span>
+        </button>
+    </div>
 
     <!-- User Page -->
     <div id="user-page" class="container-fluid">
         <div class="container">
             <!-- Site Logo (top right) -->
-<img src="Logo.png" alt="Site Logo" class="site-logo" onerror="this.style.display='none'">
-
+            <img src="Logo.png" alt="Site Logo" class="site-logo" onerror="this.style.display='none'">
 
             <!-- Hero Section -->
             <div class="hero-section">
@@ -553,6 +565,12 @@
                 <div id="songs-container">
                     <!-- Songs will be loaded here -->
                 </div>
+                
+                <!-- Debug Information (remove in production) -->
+                <div id="debug-info" class="debug-info" style="display: none;">
+                    <h6>Debug Information:</h6>
+                    <div id="debug-content"></div>
+                </div>
             </div>
         </div>
     </div>
@@ -570,139 +588,7 @@
                 </p>
             </div>
 
-            <!-- AI Song Generator -->
-            <div class="admin-panel">
-                <h3 class="text-center mb-4" style="color: var(--brand-teal);">
-                    <i class="fas fa-robot"></i> AI Song Generator
-                </h3>
-                
-                <!-- API Configuration -->
-                <div class="mb-4">
-                    <h5 style="color: var(--brand-teal);"><i class="fas fa-key"></i> API Configuration</h5>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <label for="claude-api-key" class="form-label fw-bold">Claude API Key</label>
-                            <input type="password" 
-                                   class="form-control" 
-                                   id="claude-api-key" 
-                                   placeholder="Enter your Anthropic Claude API key..."
-                                   style="border: 2px solid var(--brand-teal);">
-                        </div>
-                        <div class="col-md-6">
-                            <label for="suno-api-key" class="form-label fw-bold">Suno API Key</label>
-                            <input type="password" 
-                                   class="form-control" 
-                                   id="suno-api-key" 
-                                   placeholder="Enter your Suno API key..."
-                                   style="border: 2px solid var(--brand-teal);">
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Song Configuration -->
-                <div class="mb-4">
-                    <h5 style="color: var(--brand-teal);"><i class="fas fa-cog"></i> Song Configuration</h5>
-                    <div class="row">
-                        <div class="col-md-4">
-                            <label for="song-title" class="form-label fw-bold">Song Title</label>
-                            <input type="text" 
-                                   class="form-control" 
-                                   id="song-title" 
-                                   value="Singapore River Dreams"
-                                   style="border: 2px solid var(--brand-teal);">
-                        </div>
-                        <div class="col-md-4">
-                            <label for="genre-select" class="form-label fw-bold">Genre</label>
-                            <select class="form-control" id="genre-select" style="border: 2px solid var(--brand-teal);">
-                                <option value="Pop">Pop</option>
-                                <option value="Folk">Folk</option>
-                                <option value="Indie">Indie</option>
-                                <option value="Acoustic">Acoustic</option>
-                                <option value="Classical">Classical</option>
-                                <option value="Electronic">Electronic</option>
-                                <option value="Rock">Rock</option>
-                                <option value="Jazz">Jazz</option>
-                                <option value="R&B">R&B</option>
-                                <option value="Country">Country</option>
-                            </select>
-                        </div>
-                        <div class="col-md-4">
-                            <label for="vocal-type" class="form-label fw-bold">Vocal Type</label>
-                            <select class="form-control" id="vocal-type" style="border: 2px solid var(--brand-teal);">
-                                <option value="Mixed">Mixed</option>
-                                <option value="Male Singer">Male Singer</option>
-                                <option value="Female Singer">Female Singer</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="row mt-3">
-                        <div class="col-md-6">
-                            <label for="additional-style" class="form-label fw-bold">Additional Style</label>
-                            <input type="text" 
-                                   class="form-control" 
-                                   id="additional-style" 
-                                   placeholder="e.g., Uplifting, Dreamy, Inspirational"
-                                   style="border: 2px solid var(--brand-teal);">
-                        </div>
-                        <div class="col-md-6">
-                            <label for="negative-tags" class="form-label fw-bold">Styles to Avoid</label>
-                            <input type="text" 
-                                   class="form-control" 
-                                   id="negative-tags" 
-                                   value="Heavy Metal, Aggressive, Dark"
-                                   style="border: 2px solid var(--brand-teal);">
-                        </div>
-                    </div>
-                    <div class="mt-3">
-                        <label class="form-check-label fw-bold">
-                            <input type="checkbox" class="form-check-input" id="instrumental-only"> 
-                            Instrumental Only
-                        </label>
-                    </div>
-                </div>
-
-                <!-- Generation Controls -->
-                <div class="text-center mb-4">
-                    <button class="btn submit-btn me-3" onclick="loadDreamsAndGenerateLyrics()">
-                        <i class="fas fa-brain"></i>
-                        Generate Lyrics from Dreams
-                    </button>
-                    <button class="btn submit-btn" onclick="generateSunoSong()" disabled id="generate-song-btn">
-                        <i class="fas fa-music"></i>
-                        Create Song with Suno
-                    </button>
-                </div>
-
-                <!-- Status Display -->
-                <div id="generation-status" style="display: none;">
-                    <div class="loading">
-                        <div class="spinner-border" role="status">
-                            <span class="visually-hidden">Processing...</span>
-                        </div>
-                        <p id="status-text">Processing...</p>
-                    </div>
-                </div>
-
-                <!-- Generated Lyrics Display -->
-                <div id="generated-lyrics-display" style="display: none;">
-                    <h5 style="color: var(--brand-teal);"><i class="fas fa-scroll"></i> Generated Lyrics</h5>
-                    <div class="lyrics-display" id="lyrics-preview"></div>
-                    <div class="text-center mt-3">
-                        <button class="btn submit-btn" onclick="publishGeneratedLyrics()">
-                            <i class="fas fa-upload"></i>
-                            Publish to User Portal
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Suno Song Status -->
-                <div id="suno-status-display" style="display: none;">
-                    <h5 style="color: var(--brand-teal);"><i class="fas fa-headphones"></i> Song Generation Status</h5>
-                    <div id="suno-details"></div>
-                </div>
-            </div>
-
-            <!-- Manual Lyrics Entry (Original Form) -->
+            <!-- Manual Lyrics Entry -->
             <div class="admin-panel">
                 <h3 class="text-center mb-4" style="color: var(--brand-teal);">
                     <i class="fas fa-feather-alt"></i> Manual Lyrics Entry
@@ -803,76 +689,103 @@
             DREAMS_RANGE: 'Form Responses 2!A:B',
             LYRICS_RANGE: 'Form Responses 1!A:C'
         };
-        // Handle logo loading error
-        function handleLogoError() {
-            console.log('Logo failed to load, showing fallback text');
-            document.getElementById('hero-logo').style.display = 'none';
-            document.getElementById('logo-fallback').classList.add('show');
-        }
-        // Initialize the application
-        document.addEventListener('DOMContentLoaded', function() {
-            loadSongs();
-            loadRecentDreams();
-        });
-        // FIXED: Parse date in DD/MM/YYYY HH:MM:SS format
+        
+        // Global debug flag
+        const DEBUG_MODE = false; // Set to true to see debug information
+        
+        // FIXED: Improved date parsing function
         function parseDate(dateString) {
             if (!dateString || dateString === 'Timestamp' || dateString === '') {
-                return new Date(0);
+                console.warn('Empty or invalid dateString:', dateString);
+                return new Date(0); // Return epoch for invalid dates
             }
             
             // Clean and trim the input
             let cleanDateString = dateString.toString().trim();
             
-            // First try: Direct parsing (for standard formats)
-            let date = new Date(cleanDateString);
-            if (!isNaN(date.getTime()) && cleanDateString !== cleanDateString.match(/^\d/)) {
-                return date;
+            // Handle DD/MM/YYYY at HH:MM format (your specific format)
+            const ddmmyyyyRegex = /^(\d{1,2})\/(\d{1,2})\/(\d{4})\s+at\s+(\d{1,2}):(\d{1,2})$/;
+            let match = cleanDateString.match(ddmmyyyyRegex);
+            
+            if (match) {
+                const [, day, month, year, hour, minute] = match;
+                const parsedDate = new Date(
+                    parseInt(year), 
+                    parseInt(month) - 1, // Month is 0-indexed
+                    parseInt(day), 
+                    parseInt(hour), 
+                    parseInt(minute),
+                    0 // seconds
+                );
+                
+                if (DEBUG_MODE) {
+                    console.log(`Parsed DD/MM/YYYY at HH:MM: "${cleanDateString}" -> ${parsedDate}`);
+                }
+                
+                return parsedDate;
             }
             
-            // Handle DD/MM/YYYY HH:MM:SS format specifically
-            const dateTimeRegex = /^(\d{1,2})\/(\d{1,2})\/(\d{4})\s+(\d{1,2}):(\d{1,2}):(\d{1,2})$/;
-            const match = cleanDateString.match(dateTimeRegex);
+            // Handle DD/MM/YYYY HH:MM:SS format
+            const ddmmyyyyTimeRegex = /^(\d{1,2})\/(\d{1,2})\/(\d{4})\s+(\d{1,2}):(\d{1,2}):(\d{1,2})$/;
+            match = cleanDateString.match(ddmmyyyyTimeRegex);
             
             if (match) {
                 const [, day, month, year, hour, minute, second] = match;
-                
-                // Create date (month is 0-indexed in JavaScript)
                 const parsedDate = new Date(
                     parseInt(year), 
-                    parseInt(month) - 1, 
+                    parseInt(month) - 1, // Month is 0-indexed
                     parseInt(day), 
                     parseInt(hour), 
                     parseInt(minute), 
                     parseInt(second)
                 );
                 
-                // Validate the created date
-                if (!isNaN(parsedDate.getTime())) {
-                    return parsedDate;
+                if (DEBUG_MODE) {
+                    console.log(`Parsed DD/MM/YYYY HH:MM:SS: "${cleanDateString}" -> ${parsedDate}`);
                 }
+                
+                return parsedDate;
             }
             
-            // Handle potential concatenated timestamps (take the first one)
-            const firstTimestampMatch = cleanDateString.match(/^(\d{1,2}\/\d{1,2}\/\d{4}\s+\d{1,2}:\d{1,2}:\d{1,2})/);
-            if (firstTimestampMatch) {
-                return parseDate(firstTimestampMatch[1]);
+            // Handle DD/MM/YYYY only format
+            const ddmmyyyyOnlyRegex = /^(\d{1,2})\/(\d{1,2})\/(\d{4})$/;
+            match = cleanDateString.match(ddmmyyyyOnlyRegex);
+            
+            if (match) {
+                const [, day, month, year] = match;
+                const parsedDate = new Date(
+                    parseInt(year), 
+                    parseInt(month) - 1, // Month is 0-indexed
+                    parseInt(day), 
+                    0, 0, 0 // Default time to midnight
+                );
+                
+                if (DEBUG_MODE) {
+                    console.log(`Parsed DD/MM/YYYY only: "${cleanDateString}" -> ${parsedDate}`);
+                }
+                
+                return parsedDate;
             }
             
-            // Last resort: try to parse as standard date format
+            // Try standard Date parsing as fallback
             try {
-                const fallbackDate = new Date(cleanDateString);
-                if (!isNaN(fallbackDate.getTime())) {
-                    return fallbackDate;
+                const standardDate = new Date(cleanDateString);
+                if (!isNaN(standardDate.getTime())) {
+                    if (DEBUG_MODE) {
+                        console.log(`Parsed with standard Date: "${cleanDateString}" -> ${standardDate}`);
+                    }
+                    return standardDate;
                 }
             } catch (e) {
-                console.warn('Failed to parse date:', cleanDateString, e);
+                console.warn('Standard date parsing failed:', cleanDateString, e);
             }
             
             // Return epoch if all parsing attempts fail
             console.warn('Could not parse date string:', cleanDateString);
             return new Date(0);
         }
-        // FIXED: Format timestamp for display with better error handling
+        
+        // FIXED: Improved timestamp formatting
         function formatTimestamp(timestamp) {
             if (!timestamp) {
                 return 'No timestamp';
@@ -904,6 +817,20 @@
                 return 'Format Error';
             }
         }
+        
+        // Handle logo loading error
+        function handleLogoError() {
+            console.log('Logo failed to load, showing fallback text');
+            document.getElementById('hero-logo').style.display = 'none';
+            document.getElementById('logo-fallback').classList.add('show');
+        }
+        
+        // Initialize the application
+        document.addEventListener('DOMContentLoaded', function() {
+            loadSongs();
+            loadRecentDreams();
+        });
+        
         // Toggle between user and admin pages
         function togglePage() {
             const userPage = document.getElementById('user-page');
@@ -922,6 +849,7 @@
                 loadRecentDreams();
             }
         }
+        
         // Submit dream (now using Google Forms)
         function submitDream(event) {
             const dreamInput = document.getElementById('dream-input');
@@ -948,6 +876,7 @@
             // Allow the form to submit to Google Forms
             return true;
         }
+        
         // Submit lyrics (now using Google Forms)
         function submitLyrics(event) {
             const titleInput = document.getElementById('lyrics-title');
@@ -977,17 +906,43 @@
             // Allow the form to submit to Google Forms
             return true;
         }
+        
+        // FIXED: Enhanced loadSongs function with better sorting and debug info
         async function loadSongs() {
             const container = document.getElementById('songs-container');
             const loading = document.getElementById('songs-loading');
+            const debugDiv = document.getElementById('debug-info');
+            const debugContent = document.getElementById('debug-content');
             
             try {
                 loading.style.display = 'block';
                 container.innerHTML = '';
                 
+                if (DEBUG_MODE) {
+                    debugDiv.style.display = 'block';
+                    debugContent.innerHTML = 'Fetching songs from Google Sheets...';
+                }
+                
                 const songs = await fetchSongsFromSheet();
                 
                 loading.style.display = 'none';
+                
+                if (DEBUG_MODE) {
+                    debugContent.innerHTML = `
+                        <p><strong>Total songs fetched:</strong> ${songs.length}</p>
+                        <p><strong>Raw sorting data:</strong></p>
+                        <ul>
+                            ${songs.slice(0, 5).map(song => `
+                                <li>
+                                    <strong>${song.title}</strong><br>
+                                    Raw timestamp: "${song.timestamp}"<br>
+                                    Parsed date: ${song.parsedDate}<br>
+                                    Unix timestamp: ${song.parsedDate.getTime()}
+                                </li>
+                            `).join('')}
+                        </ul>
+                    `;
+                }
                 
                 if (songs.length === 0) {
                     container.innerHTML = `
@@ -1012,10 +967,17 @@
                         <i class="fas fa-exclamation-triangle fa-3x mb-3"></i>
                         <p>Error loading songs. Please check your API configuration.</p>
                         <small>Make sure your Google Sheets are public and API key is valid.</small>
+                        <br><small>Error: ${error.message}</small>
                     </div>
                 `;
+                
+                if (DEBUG_MODE) {
+                    debugContent.innerHTML = `<p class="text-danger">Error: ${error.message}</p>`;
+                }
             }
         }
+        
+        // FIXED: Enhanced fetchSongsFromSheet with better sorting logic
         async function fetchSongsFromSheet() {
             const url = `https://sheets.googleapis.com/v4/spreadsheets/${CONFIG.LYRICS_SHEET_ID}/values/${CONFIG.LYRICS_RANGE}?key=${CONFIG.API_KEY}`;
             
@@ -1028,7 +990,9 @@
             const data = await response.json();
             const values = data.values || [];
             
-            console.log('Raw sheet data:', values); // Debug log
+            if (DEBUG_MODE) {
+                console.log('Raw sheet data:', values);
+            }
             
             const songs = values
                 .slice(1) // Skip header row
@@ -1041,13 +1005,41 @@
                         title: row[1] || 'Untitled',
                         lyrics: row[2] || 'No lyrics available'
                     };
-                    console.log('Parsed song:', song); // Debug log
+                    
+                    if (DEBUG_MODE) {
+                        console.log('Parsed song:', {
+                            title: song.title,
+                            timestamp: song.timestamp,
+                            parsedDate: song.parsedDate,
+                            unixTime: song.parsedDate.getTime()
+                        });
+                    }
+                    
                     return song;
                 })
-                .sort((a, b) => b.parsedDate - a.parsedDate);
+                .sort((a, b) => {
+                    // Sort by parsed date in descending order (newest first)
+                    const timeA = a.parsedDate.getTime();
+                    const timeB = b.parsedDate.getTime();
+                    
+                    if (DEBUG_MODE) {
+                        console.log(`Comparing: ${a.title} (${timeA}) vs ${b.title} (${timeB})`);
+                    }
+                    
+                    return timeB - timeA; // Newest first
+                });
+            
+            if (DEBUG_MODE) {
+                console.log('Final sorted songs:', songs.map(s => ({
+                    title: s.title,
+                    timestamp: s.timestamp,
+                    unixTime: s.parsedDate.getTime()
+                })));
+            }
             
             return songs;
         }
+        
         function createSongTile(song, index) {
             const tile = document.createElement('div');
             tile.className = index === 0 ? 'song-tile latest' : 'song-tile';
@@ -1081,6 +1073,7 @@
             
             return tile;
         }
+        
         function showSongModal(song) {
             document.getElementById('modal-song-title').textContent = song.title;
             document.getElementById('modal-lyrics-content').textContent = song.lyrics;
@@ -1089,6 +1082,7 @@
             const modal = new bootstrap.Modal(document.getElementById('songModal'));
             modal.show();
         }
+        
         async function loadRecentDreams() {
             const container = document.getElementById('recent-dreams');
             const loading = document.getElementById('dreams-loading');
@@ -1128,6 +1122,7 @@
                 `;
             }
         }
+        
         async function fetchDreamsFromSheet() {
             const url = `https://sheets.googleapis.com/v4/spreadsheets/${CONFIG.DREAMS_SHEET_ID}/values/${CONFIG.DREAMS_RANGE}?key=${CONFIG.API_KEY}`;
             
@@ -1140,7 +1135,9 @@
             const data = await response.json();
             const values = data.values || [];
             
-            console.log('Raw dreams data:', values); // Debug log
+            if (DEBUG_MODE) {
+                console.log('Raw dreams data:', values);
+            }
             
             const dreams = values
                 .slice(1) // Skip header row
@@ -1152,7 +1149,11 @@
                         parsedDate: parseDate(row[0]), // Store parsed date separately
                         dream: row[1] || 'No dream content'
                     };
-                    console.log('Parsed dream:', dream); // Debug log
+                    
+                    if (DEBUG_MODE) {
+                        console.log('Parsed dream:', dream);
+                    }
+                    
                     return dream;
                 })
                 .sort((a, b) => b.parsedDate - a.parsedDate)
@@ -1160,6 +1161,7 @@
             
             return dreams;
         }
+        
         function createDreamTile(dream) {
             const tile = document.createElement('div');
             tile.className = 'song-tile mb-3';
@@ -1178,9 +1180,11 @@
             
             return tile;
         }
+        
         // Global variables for AI generation
         let generatedLyrics = '';
         let currentTaskId = '';
+        
         // Load dreams and generate lyrics
         async function loadDreamsAndGenerateLyrics() {
             const claudeApiKey = document.getElementById('claude-api-key').value.trim();
@@ -1244,6 +1248,7 @@
                 alert(`Error: ${error.message}`);
             }
         }
+        
         // Fetch latest dreams from spreadsheet
         async function fetchLatestDreams(limit = 50) {
             try {
@@ -1254,13 +1259,15 @@
                 throw new Error('Failed to load dreams from spreadsheet');
             }
         }
+        
         // Generate lyrics using Claude API with CORS proxy
         async function generateLyricsWithClaude(dreams, apiKey) {
             const dreamsText = dreams.map((dream, index) => `- ${dream}`).join('\n');
             
             const prompt = `Create 2-minute song lyrics that incorporates the following dreams about Singapore River, subtracting any hate or inappropriate content:
 ${dreamsText}
-Make the lyrics inspiring, cohesive, and celebratory of Singapore's river. Structure it with verses and chorus. Focus on coaperating the dreams in each section and add themes of hope, community, nature, and the future of Singapore's waterways.`;
+Make the lyrics inspiring, cohesive, and celebratory of Singapore's river. Structure it with verses and chorus. Focus on incorporating the dreams in each section and add themes of hope, community, nature, and the future of Singapore's waterways.`;
+            
             // Using a CORS proxy service
             const proxyUrl = 'https://cors-anywhere.herokuapp.com/';
             const targetUrl = 'https://api.anthropic.com/v1/messages';
@@ -1306,6 +1313,7 @@ Make the lyrics inspiring, cohesive, and celebratory of Singapore's river. Struc
                 return await generateLyricsAlternative(dreams);
             }
         }
+        
         // Alternative lyrics generation using a fallback method
         async function generateLyricsAlternative(dreams) {
             // Since we can't directly call Claude API from browser, we'll create 
@@ -1363,6 +1371,7 @@ Make the lyrics inspiring, cohesive, and celebratory of Singapore's river. Struc
             
             return lyrics;
         }
+        
         // Generate song with Suno API
         async function generateSunoSong() {
             const sunoApiKey = document.getElementById('suno-api-key').value.trim();
@@ -1376,6 +1385,7 @@ Make the lyrics inspiring, cohesive, and celebratory of Singapore's river. Struc
                 alert('Please generate lyrics first!');
                 return;
             }
+            
             const statusDiv = document.getElementById('generation-status');
             const statusText = document.getElementById('status-text');
             
@@ -1478,6 +1488,7 @@ Make the lyrics inspiring, cohesive, and celebratory of Singapore's river. Struc
                 alert(errorMsg);
             }
         }
+        
         // Call Suno API with CORS proxy
         async function callSunoAPI(lyrics, config, apiKey) {
             const sunoUrl = "https://apibox.erweima.ai/api/v1/generate";
@@ -1575,6 +1586,7 @@ Make the lyrics inspiring, cohesive, and celebratory of Singapore's river. Struc
             console.log('All API calls failed, creating mock response...');
             return createMockSunoResponse(config);
         }
+        
         // Create mock response when API calls fail
         function createMockSunoResponse(config) {
             const mockTaskId = 'mock_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
@@ -1591,6 +1603,7 @@ Make the lyrics inspiring, cohesive, and celebratory of Singapore's river. Struc
                 }
             };
         }
+        
         // Publish generated lyrics to user portal
         async function publishGeneratedLyrics() {
             if (!generatedLyrics) {
